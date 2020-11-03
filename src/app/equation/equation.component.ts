@@ -27,7 +27,24 @@ export class EquationComponent implements OnInit {
     return this.mathForm.value.b;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // statusChanges is an Observable (EventEmitter)
+    // We set up the subscription in ngOnInit because
+    // we only want to subscribe exactly one time.
+    // If we subscribed multiple times, then that subscription
+    // function would run repeatedly for each event emitted from the observable.
+    this.mathForm.statusChanges.subscribe((value) => {
+      if (value === 'INVALID') {
+        return;
+      }
+
+      this.mathForm.setValue({
+        a: this.randomNumber(),
+        b: this.randomNumber(),
+        answer: '',
+      });
+    });
+  }
 
   randomNumber() {
     return Math.floor(Math.random() * 10);
